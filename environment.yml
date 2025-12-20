@@ -92,6 +92,7 @@ dependencies:
       - pyrect==0.2.0
       - pyscreeze==1.0.1
       - pytweening==1.2.0
+      - pyzbar==0.1.9
       - rubik-solver==0.2.0
       - typing-extensions==4.12.2
 prefix: D:\Python\envs\common_env
