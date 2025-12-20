@@ -61,18 +61,21 @@ cv2.setMouseCallback('test',mousePoints)
 
 # main loop
 while True:
-    if not_printed and len(pointList) != 0 and len(pointList) % SHAPE_POINTS_NUMBER == 0:
-        not_printed = False
-        pt1,pt2,pt3 = pointList[-SHAPE_POINTS_NUMBER:]
-        cv2.line(img,pt1,pt2,LINE_COLOR,LINE_PIXEL_SIZE)
-        cv2.line(img,pt2,pt3,LINE_COLOR,LINE_PIXEL_SIZE)
-        pt1 = np.array(pt1)
-        pt2 = np.array(pt2)
-        pt3 = np.array(pt3)
-        angle = getAngle(pt1,pt2,pt3)
-        cv2.putText(img,str(f"{angle:.2f}"),
-                    pt2 + (NUMBER_OFFSET_PIXEL_X,NUMBER_OFFSET_PIXEL_Y),cv2.FONT_HERSHEY_COMPLEX,NUMBER_PIXEL_SIZE,NUMBER_COLOR)
-        print(f"angle is : {angle:.2f}°")
+    if not_printed and len(pointList) != 0:
+        if len(pointList) % SHAPE_POINTS_NUMBER == 2:
+            pt1,pt2 = pointList[-2:]
+            cv2.line(img,pt1,pt2,LINE_COLOR,LINE_PIXEL_SIZE)
+        elif len(pointList) % SHAPE_POINTS_NUMBER == 0:
+            not_printed = False
+            pt1,pt2,pt3 = pointList[-SHAPE_POINTS_NUMBER:]
+            cv2.line(img,pt2,pt3,LINE_COLOR,LINE_PIXEL_SIZE)
+            pt1 = np.array(pt1)
+            pt2 = np.array(pt2)
+            pt3 = np.array(pt3)
+            angle = getAngle(pt1,pt2,pt3)
+            cv2.putText(img,str(f"{angle:.2f}"),
+                        pt2 + (NUMBER_OFFSET_PIXEL_X,NUMBER_OFFSET_PIXEL_Y),cv2.FONT_HERSHEY_COMPLEX,NUMBER_PIXEL_SIZE,NUMBER_COLOR)
+            print(f"angle is : {angle:.2f}°")
 
     cv2.imshow('test',img)
     key = cv2.waitKey(1) & 0xFF
