@@ -15,11 +15,22 @@ img = original_img.copy() # use backup file
 pointList = []
 not_printed = True
 
+# Predefined
+SHAPE_POINTS_NUMBER=3   # Unalterable
+POINT_PIXEL_SIZE=3
+LINE_PIXEL_SIZE=1
+NUMBER_PIXEL_SIZE=0.5
+NUMBER_OFFSET_PIXEL_X=-25
+NUMBER_OFFSET_PIXEL_Y=25
+POINT_COLOR=(255,0,0)
+NUMBER_COLOR=(0,255,0)
+LINE_COLOR=(0,0,255)
+
 def mousePoints(event,x,y,flags,params):
     global img, pointList, not_printed
     if event == cv2.EVENT_LBUTTONDOWN:
         not_printed = True
-        cv2.circle(img,(x,y),5,(0,0,255),cv2.FILLED)
+        cv2.circle(img,(x,y),POINT_PIXEL_SIZE,POINT_COLOR,cv2.FILLED)
         pointList.append([x,y])
         print("-----\n",pointList,"\n-----\n")
     elif event == cv2.EVENT_RBUTTONDOWN:
@@ -50,13 +61,18 @@ cv2.setMouseCallback('test',mousePoints)
 
 # main loop
 while True:
-    if not_printed and len(pointList) != 0 and len(pointList) % 3 == 0:
+    if not_printed and len(pointList) != 0 and len(pointList) % SHAPE_POINTS_NUMBER == 0:
         not_printed = False
-        pt1,pt2,pt3 = pointList[-3:]
+        pt1,pt2,pt3 = pointList[-SHAPE_POINTS_NUMBER:]
+        cv2.line(img,pt1,pt2,LINE_COLOR,LINE_PIXEL_SIZE)
+        cv2.line(img,pt2,pt3,LINE_COLOR,LINE_PIXEL_SIZE)
         pt1 = np.array(pt1)
         pt2 = np.array(pt2)
         pt3 = np.array(pt3)
-        print(f"angle is : {getAngle(pt1,pt2,pt3):.2f}°")
+        angle = getAngle(pt1,pt2,pt3)
+        cv2.putText(img,str(f"{angle:.2f}"),
+                    pt2 + (NUMBER_OFFSET_PIXEL_X,NUMBER_OFFSET_PIXEL_Y),cv2.FONT_HERSHEY_COMPLEX,NUMBER_PIXEL_SIZE,NUMBER_COLOR)
+        print(f"angle is : {angle:.2f}°")
 
     cv2.imshow('test',img)
     key = cv2.waitKey(1) & 0xFF
